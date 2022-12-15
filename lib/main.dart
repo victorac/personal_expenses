@@ -1,30 +1,103 @@
 import 'package:flutter/material.dart';
-import './widgets/transactions_controller.dart';
 
-void main() => runApp(const PersonalExpenses());
+import './widgets/new_transaction.dart';
+import './widgets/transaction_list.dart';
+import './models/transaction.dart';
 
-class PersonalExpenses extends StatelessWidget {
-  const PersonalExpenses({super.key});
+void main() => runApp(const App());
+
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Personal Expenses'),
-        ),
-        body: Column(
-          children: const [
-            SizedBox(
+    return const MaterialApp(
+      title: 'Where is this?',
+      home: PersonalExpenses(),
+    );
+  }
+}
+
+class PersonalExpenses extends StatefulWidget {
+  const PersonalExpenses({super.key});
+
+  @override
+  State<PersonalExpenses> createState() => _PersonalExpensesState();
+}
+
+class _PersonalExpensesState extends State<PersonalExpenses> {
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: '0',
+      title: 'Shoes',
+      amount: 17.32,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: '1',
+      title: 'Books',
+      amount: 127.32,
+      date: DateTime.now(),
+    ),
+  ];
+
+  void _addTransaction(String title, String amount) {
+    setState(() {
+      _transactions.add(Transaction(
+        id: DateTime.now().toString(),
+        title: title,
+        amount: double.parse(amount),
+        date: DateTime.now(),
+      ));
+    });
+  }
+
+  void _startAddNewTransaction(
+    BuildContext context,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext _) =>
+          NewTransaction(addTransaction: _addTransaction),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Personal Expenses'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _startAddNewTransaction(context);
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
               width: double.infinity,
               child: Card(
                 child: Text('Chart!'),
               ),
             ),
-            TransactionController(),
+            TransactionList(
+              transactions: _transactions,
+            ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _startAddNewTransaction(context);
+        },
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
