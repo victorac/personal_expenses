@@ -11,9 +11,25 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Where is this?',
-      home: PersonalExpenses(),
+    return MaterialApp(
+      title: 'Personal Expenses',
+      home: const PersonalExpenses(),
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: const TextStyle(
+                  fontFamily: 'Hammersmith One',
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal),
+            ),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'Open Sans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -27,18 +43,18 @@ class PersonalExpenses extends StatefulWidget {
 
 class _PersonalExpensesState extends State<PersonalExpenses> {
   final List<Transaction> _transactions = [
-    Transaction(
-      id: '0',
-      title: 'Shoes',
-      amount: 17.32,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: '1',
-      title: 'Books',
-      amount: 127.32,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: '0',
+    //   title: 'Shoes',
+    //   amount: 17.32,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: '1',
+    //   title: 'Books',
+    //   amount: 127.32,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   void _addTransaction(String title, String amount) {

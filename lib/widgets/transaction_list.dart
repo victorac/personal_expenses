@@ -12,55 +12,70 @@ class TransactionList extends StatelessWidget {
     initializeDateFormatting('pt_BR', null);
 
     return SizedBox(
-      height: 400,
-      child: ListView.builder(
-        itemBuilder: ((context, index) => Card(
-              child: Row(
+      height: 300,
+      child: transactions.isEmpty
+          ? SizedBox(
+              height: 200,
+              child: Column(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.purple,
-                        width: 2,
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      '\$${transactions[index].amount.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.purple),
-                    ),
+                  const Text('No Transactions found'),
+                  const SizedBox(
+                    height: 20,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        transactions[index].title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        DateFormat('MMMM d, y', 'pt_BR')
-                            .format(transactions[index].date),
-                        style: const TextStyle(
-                          color: Colors.blueGrey,
-                        ),
-                      ),
-                    ],
-                  )
+                  Image.asset('assets/images/empty_3.png'),
                 ],
               ),
-            )),
-        itemCount: transactions.length,
-      ),
+            )
+          : ListView.builder(
+              itemBuilder: ((context, index) => Card(
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).primaryColor,
+                              width: 2,
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            '\$${transactions[index].amount.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              transactions[index].title,
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            Text(
+                              DateFormat('MMMM d, y', 'pt_BR')
+                                  .format(transactions[index].date),
+                              style: TextStyle(
+                                fontFamily: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.fontFamily,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+              itemCount: transactions.length,
+            ),
     );
   }
 }
