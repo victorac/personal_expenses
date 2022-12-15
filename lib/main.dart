@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './widgets/chart.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './models/transaction.dart';
@@ -78,6 +79,19 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
     );
   }
 
+  List<Transaction> get _recentTransactions {
+    List<Transaction> recentTransactions = _transactions
+        .where(
+          (element) => element.date.isAfter(
+            DateTime.now().subtract(
+              const Duration(days: 7),
+            ),
+          ),
+        )
+        .toList();
+    return recentTransactions;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,11 +109,9 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
-              child: Card(
-                child: Text('Chart!'),
-              ),
+              child: Chart(recentTransactions: _recentTransactions),
             ),
             TransactionList(
               transactions: _transactions,
