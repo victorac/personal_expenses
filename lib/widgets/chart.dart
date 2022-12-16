@@ -50,10 +50,12 @@ class Chart extends StatelessWidget {
         children: groupedTransactionValues.map(
           (e) {
             var weekPercentage = (e['totalAmount'] as double) / weekTotal;
-            return ChartBar(
-              weekPercentage: weekPercentage,
-              amount: e['totalAmount'] as double,
-              weekDay: e['weekDay'].toString(),
+            return Expanded(
+              child: ChartBar(
+                weekPercentage: weekPercentage,
+                amount: e['totalAmount'] as double,
+                weekDay: e['weekDay'].toString(),
+              ),
             );
           },
         ).toList(),
