@@ -56,6 +56,12 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
     //   amount: 127.32,
     //   date: DateTime.now(),
     // ),
+    Transaction(
+      id: 'id',
+      title: 'Fish',
+      amount: 100,
+      date: DateTime.now().subtract(const Duration(days: 2)),
+    ),
   ];
 
   void _addTransaction(String title, String amount) {

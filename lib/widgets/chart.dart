@@ -28,7 +28,18 @@ class Chart extends StatelessWidget {
         'weekDay': DateFormat.E().format(weekDay),
         'totalAmount': totalAmount,
       };
-    });
+    }).reversed.toList();
+  }
+
+  double get weekTotal {
+    var total = 0.0;
+    for (var i = 0; i < recentTransactions.length; i++) {
+      total += recentTransactions[i].amount;
+    }
+    if (total == 0) {
+      return 1;
+    }
+    return total;
   }
 
   @override
@@ -37,19 +48,33 @@ class Chart extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       elevation: 6,
       child: Row(
-        children: groupedTransactionValues
-            .map(
-              (e) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: groupedTransactionValues.map(
+          (e) {
+            var weekPercentage = (e['totalAmount'] as double) / weekTotal;
+            return Container(
+              margin: const EdgeInsets.all(10),
+              child: Column(
                 children: [
                   Container(
-                    color: Colors.amber,
-                    height: 10,
+                    color: Colors.black,
+                    height: 50 * (1 - weekPercentage),
+                    width: 10,
                   ),
-                  Text(e['weekDay'].toString())
+                  Container(
+                    color: Colors.amber,
+                    height: 50 * weekPercentage,
+                    width: 10,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(e['weekDay'].toString().substring(0, 1))
                 ],
               ),
-            )
-            .toList(),
+            );
+          },
+        ).toList(),
       ),
     );
   }
