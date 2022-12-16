@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'chart_bar.dart';
 import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
@@ -21,11 +22,8 @@ class Chart extends StatelessWidget {
         }
       }
 
-      print(DateFormat.E().format(weekDay));
-      print(totalAmount);
-
       return {
-        'weekDay': DateFormat.E().format(weekDay),
+        'weekDay': DateFormat.E().format(weekDay).substring(0, 1),
         'totalAmount': totalAmount,
       };
     }).reversed.toList();
@@ -52,26 +50,10 @@ class Chart extends StatelessWidget {
         children: groupedTransactionValues.map(
           (e) {
             var weekPercentage = (e['totalAmount'] as double) / weekTotal;
-            return Container(
-              margin: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    color: Colors.black,
-                    height: 50 * (1 - weekPercentage),
-                    width: 10,
-                  ),
-                  Container(
-                    color: Colors.amber,
-                    height: 50 * weekPercentage,
-                    width: 10,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(e['weekDay'].toString().substring(0, 1))
-                ],
-              ),
+            return ChartBar(
+              weekPercentage: weekPercentage,
+              amount: e['totalAmount'] as double,
+              weekDay: e['weekDay'].toString(),
             );
           },
         ).toList(),
