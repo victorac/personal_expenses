@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTransaction;
@@ -12,18 +13,32 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final inputTitle = TextEditingController();
+  final _inputTitle = TextEditingController();
+  final _inputAmount = TextEditingController();
+  DateTime? _selectedDate;
 
-  final inputAmount = TextEditingController();
-
-  void handleSubmit() {
-    if (inputTitle.text.isEmpty || inputAmount.text.isEmpty) {
+  void _handleSubmit() {
+    if (_inputTitle.text.isEmpty || _inputAmount.text.isEmpty) {
       return;
     }
 
-    widget.addTransaction(inputTitle.text, inputAmount.text);
+    widget.addTransaction(_inputTitle.text, _inputAmount.text);
 
     Navigator.of(context).pop();
+  }
+
+  void _selectDate() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+    ).then((date) {
+      if (date == null) return;
+      setState(() {
+        _selectedDate = date;
+      });
+    });
   }
 
   @override
@@ -34,17 +49,28 @@ class _NewTransactionState extends State<NewTransaction> {
         children: [
           TextField(
             decoration: const InputDecoration(labelText: 'Title'),
-            controller: inputTitle,
-            onSubmitted: (_) => handleSubmit(),
+            controller: _inputTitle,
+            onSubmitted: (_) => _handleSubmit(),
           ),
           TextField(
             decoration: const InputDecoration(labelText: 'Amount'),
-            controller: inputAmount,
-            onSubmitted: (_) => handleSubmit(),
+            controller: _inputAmount,
+            onSubmitted: (_) => _handleSubmit(),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
           ),
+          Row(
+            children: [
+              _selectedDate == null
+                  ? const Text('No date selected')
+                  : Text(DateFormat('dd/MM/yyyy').format(_selectedDate!)),
+              TextButton(
+                onPressed: _selectDate,
+                child: const Text('Select a date'),
+              ),
+            ],
+          ),
           TextButton(
-            onPressed: handleSubmit,
+            onPressed: _handleSubmit,
             style: TextButton.styleFrom(foregroundColor: Colors.purple),
             child: const Text(
               'Add transaction',
