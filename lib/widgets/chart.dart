@@ -46,7 +46,7 @@ class Chart extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       elevation: 6,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: groupedTransactionValues.map(
           (e) {
             var weekPercentage = (e['totalAmount'] as double) / weekTotal;

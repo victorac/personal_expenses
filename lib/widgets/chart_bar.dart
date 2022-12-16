@@ -5,21 +5,24 @@ class ChartBar extends StatelessWidget {
   final double weekPercentage;
   final String weekDay;
   final double amount;
-  const ChartBar({
+  ChartBar({
     super.key,
     required this.weekPercentage,
     required this.amount,
     required this.weekDay,
   });
+  final amountFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
 
   @override
   Widget build(BuildContext context) {
-    var amountFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
     return Container(
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
-          FittedBox(child: Text(amountFormat.format(amount))),
+          SizedBox(
+            height: 20,
+            child: FittedBox(child: Text(amountFormat.format(amount))),
+          ),
           const SizedBox(
             height: 5,
           ),
