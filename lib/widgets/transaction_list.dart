@@ -5,7 +5,9 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
-  TransactionList({super.key, required this.transactions});
+  final Function deleteTransaction;
+  TransactionList(
+      {super.key, required this.transactions, required this.deleteTransaction});
   final amountFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
 
   @override
@@ -53,6 +55,12 @@ class TransactionList extends StatelessWidget {
                               Theme.of(context).textTheme.headline6?.fontFamily,
                           color: Colors.blueGrey,
                         ),
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.close),
+                        color: Theme.of(context).errorColor,
+                        onPressed: () =>
+                            deleteTransaction(transactions[index].id),
                       ),
                     ),
                   )),

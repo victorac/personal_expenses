@@ -64,13 +64,13 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
     ),
   ];
 
-  void _addTransaction(String title, String amount) {
+  void _addTransaction(String title, String amount, DateTime date) {
     setState(() {
       _transactions.add(Transaction(
         id: DateTime.now().toString(),
         title: title,
         amount: double.parse(amount),
-        date: DateTime.now(),
+        date: date,
       ));
     });
   }
@@ -83,6 +83,12 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
       builder: (BuildContext _) =>
           NewTransaction(addTransaction: _addTransaction),
     );
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) => element.id == id);
+    });
   }
 
   List<Transaction> get _recentTransactions {
@@ -121,6 +127,7 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
             ),
             TransactionList(
               transactions: _transactions,
+              deleteTransaction: _deleteTransaction,
             ),
           ],
         ),
