@@ -45,40 +45,50 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          TextField(
-            decoration: const InputDecoration(labelText: 'Title'),
-            controller: _inputTitle,
-            onSubmitted: (_) => _handleSubmit(),
-          ),
-          TextField(
-            decoration: const InputDecoration(labelText: 'Amount'),
-            controller: _inputAmount,
-            onSubmitted: (_) => _handleSubmit(),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          ),
-          Row(
+    return SingleChildScrollView(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+              left: 10,
+              right: 10,
+              top: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              _selectedDate == null
-                  ? const Text('No date selected')
-                  : Text(DateFormat('dd/MM/yyyy').format(_selectedDate!)),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Title'),
+                controller: _inputTitle,
+                onSubmitted: (_) => _handleSubmit(),
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Amount'),
+                controller: _inputAmount,
+                onSubmitted: (_) => _handleSubmit(),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+              ),
+              Row(
+                children: [
+                  _selectedDate == null
+                      ? const Text('No date selected')
+                      : Text(DateFormat('dd/MM/yyyy').format(_selectedDate!)),
+                  TextButton(
+                    onPressed: _selectDate,
+                    child: const Text('Select a date'),
+                  ),
+                ],
+              ),
               TextButton(
-                onPressed: _selectDate,
-                child: const Text('Select a date'),
+                onPressed: _handleSubmit,
+                style: TextButton.styleFrom(foregroundColor: Colors.purple),
+                child: const Text(
+                  'Add transaction',
+                ),
               ),
             ],
           ),
-          TextButton(
-            onPressed: _handleSubmit,
-            style: TextButton.styleFrom(foregroundColor: Colors.purple),
-            child: const Text(
-              'Add transaction',
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -6,8 +6,10 @@ import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
   final List<Transaction> recentTransactions;
+  final double height;
 
-  const Chart({super.key, required this.recentTransactions});
+  const Chart(
+      {super.key, required this.recentTransactions, required this.height});
 
   List<Map<String, Object>> get groupedTransactionValues {
     return List.generate(7, (index) {
@@ -42,23 +44,33 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(10),
-      elevation: 6,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: groupedTransactionValues.map(
-          (e) {
-            var weekPercentage = (e['totalAmount'] as double) / weekTotal;
-            return Expanded(
-              child: ChartBar(
-                weekPercentage: weekPercentage,
-                amount: e['totalAmount'] as double,
-                weekDay: e['weekDay'].toString(),
-              ),
-            );
-          },
-        ).toList(),
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: Card(
+        margin: const EdgeInsets.all(10),
+        elevation: 6,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: groupedTransactionValues.map(
+              (e) {
+                var weekPercentage = (e['totalAmount'] as double) / weekTotal;
+                return Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: ChartBar(
+                      weekPercentage: weekPercentage,
+                      amount: e['totalAmount'] as double,
+                      weekDay: e['weekDay'].toString(),
+                    ),
+                  ),
+                );
+              },
+            ).toList(),
+          ),
+        ),
       ),
     );
   }

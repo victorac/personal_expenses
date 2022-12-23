@@ -56,12 +56,12 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
     //   amount: 127.32,
     //   date: DateTime.now(),
     // ),
-    Transaction(
-      id: 'id',
-      title: 'Fish',
-      amount: 100,
-      date: DateTime.now().subtract(const Duration(days: 2)),
-    ),
+    // Transaction(
+    //   id: 'id',
+    //   title: 'Fish',
+    //   amount: 100,
+    //   date: DateTime.now().subtract(const Duration(days: 2)),
+    // ),
   ];
 
   void _addTransaction(String title, String amount, DateTime date) {
@@ -104,31 +104,61 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
     return recentTransactions;
   }
 
+  bool _showChart = true;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Personal Expenses'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _startAddNewTransaction(context);
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
+    final appBar = AppBar(
+      title: const Text('Personal Expenses'),
+      actions: [
+        IconButton(
+          onPressed: () {
+            _startAddNewTransaction(context);
+          },
+          icon: const Icon(Icons.add),
+        ),
+      ],
+    );
+    final transactionList = SizedBox(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          .7,
+      child: TransactionList(
+        transactions: _transactions,
+        deleteTransaction: _deleteTransaction,
       ),
+    );
+    final portraitChartHeight = (MediaQuery.of(context).size.height -
+            appBar.preferredSize.height -
+            MediaQuery.of(context).padding.top) *
+        0.3;
+    final landscapeChartHeight = portraitChartHeight / 0.3 * 0.7;
+    final portraitChart = Chart(
+      recentTransactions: _recentTransactions,
+      height: portraitChartHeight,
+    );
+    final landscapeChart = Chart(
+      recentTransactions: _recentTransactions,
+      height: landscapeChartHeight,
+    );
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final switchButton = Switch(
+        value: _showChart,
+        onChanged: (value) => setState(() {
+              _showChart = value;
+            }));
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: Chart(recentTransactions: _recentTransactions),
-            ),
-            TransactionList(
-              transactions: _transactions,
-              deleteTransaction: _deleteTransaction,
-            ),
+            if (isLandscape) switchButton,
+            if (isLandscape && _showChart) landscapeChart,
+            if (!isLandscape) portraitChart,
+            if (!isLandscape || !_showChart) transactionList,
           ],
         ),
       ),

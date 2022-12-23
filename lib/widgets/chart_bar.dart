@@ -15,19 +15,18 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      child: Column(
+    return LayoutBuilder(builder: (context, constraints) {
+      return Column(
         children: [
           SizedBox(
-            height: 20,
+            height: constraints.maxHeight * .15,
             child: FittedBox(child: Text(amountFormat.format(amount))),
           ),
-          const SizedBox(
-            height: 5,
+          SizedBox(
+            height: constraints.maxHeight * .05,
           ),
           SizedBox(
-            height: 50,
+            height: constraints.maxHeight * .6,
             width: 10,
             child: Stack(
               children: [
@@ -53,12 +52,15 @@ class ChartBar extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            height: 5,
+          SizedBox(
+            height: constraints.maxHeight * .05,
           ),
-          Text(weekDay)
+          SizedBox(
+            height: constraints.maxHeight * .15,
+            child: FittedBox(child: Text(weekDay)),
+          )
         ],
-      ),
-    );
+      );
+    });
   }
 }
