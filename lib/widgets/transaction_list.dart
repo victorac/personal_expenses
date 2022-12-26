@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
+
+import './transaction_item.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function deleteTransaction;
-  TransactionList(
-      {super.key, required this.transactions, required this.deleteTransaction});
-  final amountFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
+  const TransactionList({
+    super.key,
+    required this.transactions,
+    required this.deleteTransaction,
+  });
 
   @override
   Widget build(BuildContext context) {
-    initializeDateFormatting('pt_BR', null);
-
     return transactions.isEmpty
         ? SizedBox(
             height: 200,
@@ -28,39 +28,9 @@ class TransactionList extends StatelessWidget {
             ),
           )
         : ListView.builder(
-            itemBuilder: ((context, index) => Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FittedBox(
-                          child: Text(
-                            amountFormat.format(transactions[index].amount),
-                          ),
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      transactions[index].title,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    subtitle: Text(
-                      DateFormat('MMMM d, y', 'pt_BR')
-                          .format(transactions[index].date),
-                      style: TextStyle(
-                        fontFamily:
-                            Theme.of(context).textTheme.headline6?.fontFamily,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.close),
-                      color: Theme.of(context).errorColor,
-                      onPressed: () =>
-                          deleteTransaction(transactions[index].id),
-                    ),
-                  ),
+            itemBuilder: ((context, index) => TransactionItem(
+                  transaction: transactions[index],
+                  deleteTransaction: deleteTransaction,
                 )),
             itemCount: transactions.length,
           );
