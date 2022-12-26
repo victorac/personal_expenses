@@ -43,26 +43,7 @@ class PersonalExpenses extends StatefulWidget {
 }
 
 class _PersonalExpensesState extends State<PersonalExpenses> {
-  final List<Transaction> _transactions = [
-    // Transaction(
-    //   id: '0',
-    //   title: 'Shoes',
-    //   amount: 17.32,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: '1',
-    //   title: 'Books',
-    //   amount: 127.32,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 'id',
-    //   title: 'Fish',
-    //   amount: 100,
-    //   date: DateTime.now().subtract(const Duration(days: 2)),
-    // ),
-  ];
+  final List<Transaction> _transactions = [];
 
   void _addTransaction(String title, String amount, DateTime date) {
     setState(() {
@@ -106,9 +87,8 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
 
   bool _showChart = true;
 
-  @override
-  Widget build(BuildContext context) {
-    final appBar = AppBar(
+  AppBar _buildAppBar() {
+    return AppBar(
       title: const Text('Personal Expenses'),
       actions: [
         IconButton(
@@ -119,6 +99,40 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
         ),
       ],
     );
+  }
+
+  List<Widget> _buildPortraitBody(double height, Widget transactionList) {
+    final portraitChartHeight = height * 0.3;
+    final chart = Chart(
+      recentTransactions: _recentTransactions,
+      height: portraitChartHeight,
+    );
+    return [chart, transactionList];
+  }
+
+  List<Widget> _buildLandscapeBody(double height, Widget transactionList) {
+    final landscapeChartHeight = height * 0.7;
+    final switchButton = Switch(
+        value: _showChart,
+        onChanged: (value) => setState(() {
+              _showChart = value;
+            }));
+    List<Widget> body = [switchButton];
+    if (_showChart) {
+      final chart = Chart(
+        recentTransactions: _recentTransactions,
+        height: landscapeChartHeight,
+      );
+      body.add(chart);
+    } else {
+      body.add(transactionList);
+    }
+    return body;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appBar = _buildAppBar();
     final transactionList = SizedBox(
       height: (MediaQuery.of(context).size.height -
               appBar.preferredSize.height -
@@ -129,37 +143,23 @@ class _PersonalExpensesState extends State<PersonalExpenses> {
         deleteTransaction: _deleteTransaction,
       ),
     );
-    final portraitChartHeight = (MediaQuery.of(context).size.height -
-            appBar.preferredSize.height -
-            MediaQuery.of(context).padding.top) *
-        0.3;
-    final landscapeChartHeight = portraitChartHeight / 0.3 * 0.7;
-    final portraitChart = Chart(
-      recentTransactions: _recentTransactions,
-      height: portraitChartHeight,
-    );
-    final landscapeChart = Chart(
-      recentTransactions: _recentTransactions,
-      height: landscapeChartHeight,
-    );
+    final screenHeight = MediaQuery.of(context).size.height;
+    final paddingTop = MediaQuery.of(context).padding.top;
+    final appBarHeight = appBar.preferredSize.height;
+    final finalHeight = screenHeight - appBarHeight - paddingTop;
+
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    final switchButton = Switch(
-        value: _showChart,
-        onChanged: (value) => setState(() {
-              _showChart = value;
-            }));
+    final body = isLandscape
+        ? _buildLandscapeBody(finalHeight, transactionList)
+        : _buildPortraitBody(finalHeight, transactionList);
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (isLandscape) switchButton,
-            if (isLandscape && _showChart) landscapeChart,
-            if (!isLandscape) portraitChart,
-            if (!isLandscape || !_showChart) transactionList,
-          ],
+          children: [...body],
         ),
       ),
       floatingActionButton: FloatingActionButton(
